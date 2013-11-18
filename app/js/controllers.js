@@ -26,15 +26,15 @@ appControllers.controller('QuestionDetailCtrl', ['$location', '$scope', '$routeP
                                           posted_epoch_time: (new Date).getTime(),
                                           author: Auth.retrieveCredentials()});
 
-            $scope.answerForm.$setPristine();
-            var defaultForm = {
-                answer: ""
-            };
-
             $scope.answer = defaultForm;
             Question.answer({questionId: $routeParams.questionId},
                             {"answer":{
                                 "content":$scope.answer}});
+
+            $scope.answerForm.$setPristine();
+            var defaultForm = {
+                answer: ""
+            };
         };
 
     }]);

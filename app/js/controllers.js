@@ -21,20 +21,22 @@ appControllers.controller('QuestionDetailCtrl', ['$location', '$scope', '$routeP
         };
 
         $scope.addAns = function() {
+            console.log($scope.answer);
             $scope.question.answers.push({votes: 0,
                                           content: $scope.answer.answer,
                                           posted_epoch_time: (new Date).getTime(),
                                           author: Auth.retrieveCredentials()});
 
-            $scope.answer = defaultForm;
+
             Question.answer({questionId: $routeParams.questionId},
                             {"answer":{
-                                "content":$scope.answer}});
+                                "content":$scope.answer.answer}});
 
             $scope.answerForm.$setPristine();
             var defaultForm = {
                 answer: ""
             };
+            $scope.answer = defaultForm;
         };
 
     }]);

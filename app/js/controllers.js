@@ -23,7 +23,7 @@ appControllers.controller('QuestionDetailCtrl', ['$location', '$scope', '$routeP
         $scope.addAns = function() {
             $scope.question.answers.push({votes: 0,
                                           content: $scope.answer.answer,
-                                          posted_epoch_time: (new Date).getTime()/1000,
+                                          posted_epoch_time: (new Date).getTime(),
                                           author: Auth.retrieveCredentials()});
 
             $scope.answerForm.$setPristine();

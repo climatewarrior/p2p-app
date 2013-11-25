@@ -28,7 +28,7 @@ appControllers.controller('QuestionDetailCtrl', ['$location', '$scope', '$routeP
                                           author: Auth.retrieveCredentials()});
 
 
-            Question.answer({questionId: $routeParams.questionId},
+            Question.put({questionId: $routeParams.questionId},
                             {"answer":{
                                 "content":$scope.answer.answer}});
 

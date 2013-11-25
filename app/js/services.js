@@ -11,7 +11,7 @@ p2pServices.factory('Question', ['$resource',
                     params:{questionId:''},
                     isArray:true},
             save: {method:'POST'},
-            answer: {method:'PUT'},
+            put: {method:'PUT'}
         });
 }]);
 
@@ -19,27 +19,27 @@ p2pServices.factory('User', ['$resource',
     function($resource){
         return $resource('user/:username', {}, {
             save: {method:'POST'},
-            getInfo: {method:'GET'},
+            getInfo: {method:'GET'}
         });
 }]);
 
 p2pServices.factory('ProfileQuestions', ['$resource',
     function($resource){
         return $resource('user/question', {}, {
-            pull: {method:'GET',
+          pull: {method:'GET',
                     isArray:true},
-			save: {method:'POST'},
-            getInfo: {method:'GET'},
+          save: {method:'POST'},
+          getInfo: {method:'GET'}
         });
 }]);
 
 p2pServices.factory('ProfileAnswers', ['$resource',
     function($resource){
         return $resource('user/answer', {}, {
-            pull: {method:'GET',
+          pull: {method:'GET',
                     isArray:true},
-			save: {method:'POST'},
-            getInfo: {method:'GET'},
+          save: {method:'POST'},
+          getInfo: {method:'GET'}
         });
 }]);
 
@@ -47,8 +47,7 @@ p2pServices.factory('OtherQuestions', ['$resource',
     function($resource){
         return $resource('user/:username/question', {}, {
             save: {method:'POST'},
-            getInfo: {method:'GET',
-						isArray:true},
+            getInfo: {method:'GET', isArray:true}
         });
 }]);
 
@@ -56,28 +55,27 @@ p2pServices.factory('OtherAnswers', ['$resource',
     function($resource){
         return $resource('user/:username/answer', {}, {
             save: {method:'POST'},
-            getInfo: {method:'GET',
-						isArray:true},
+            getInfo: {method:'GET', isArray:true}
         });
 }]);
 
 p2pServices.factory('Auth', ['Base64', '$cookieStore', '$http', function (Base64, $cookieStore, $http) {
-    // initialize to whatever is in the cookie, if anything
-    $http.defaults.headers.common['Authorization'] = 'Basic ' + $cookieStore.get('authdata');
+  // initialize to whatever is in the cookie, if anything
+  $http.defaults.headers.common['Authorization'] = 'Basic ' + $cookieStore.get('authdata');
 
-    return {
-        correctCredentials: function(username, password, success, error) {
-            var encoded = Base64.encode(username + ':' + password);
+  return {
+    correctCredentials: function(username, password, success, error) {
+      var encoded = Base64.encode(username + ':' + password);
 
-            $http({method: 'GET',
-                   url: 'test_auth',
-                   headers: {
-                       'Authorization': 'Basic ' + encoded
-                   }}).success(success).error(error);
+      $http({method: 'GET',
+             url: 'test_auth',
+             headers: {
+               'Authorization': 'Basic ' + encoded
+             }}).success(success).error(error);
 
-        },
-        setCredentials: function (username, password) {
-            var encoded = Base64.encode(username + ':' + password);
+    },
+    setCredentials: function (username, password) {
+      var encoded = Base64.encode(username + ':' + password);
 
             $http.defaults.headers.common.Authorization = 'Basic ' + encoded;
             $cookieStore.put('authdata', encoded);
@@ -98,24 +96,24 @@ p2pServices.factory('Auth', ['Base64', '$cookieStore', '$http', function (Base64
 }]);
 
 p2pServices.factory('cordovaReady', [function () {
-        return function (fn) {
-            var queue = [],
-            impl = function () {
-                queue.push([].slice.call(arguments));
-            };
+  return function (fn) {
+    var queue = [],
+    impl = function () {
+      queue.push([].slice.call(arguments));
+    };
 
-            document.addEventListener('deviceready', function () {
-                queue.forEach(function (args) {
-                    fn.apply(this, args);
-                });
-                impl = fn;
-            }, false);
+    document.addEventListener('deviceready', function () {
+      queue.forEach(function (args) {
+        fn.apply(this, args);
+      });
+      impl = fn;
+    }, false);
 
-            return function () {
-                return impl.apply(this, arguments);
-            };
-        };
-    }]);
+    return function () {
+      return impl.apply(this, arguments);
+    };
+  };
+}]);
 
 p2pServices.factory('Base64', function() {
     var keyStr = 'ABCDEFGHIJKLMNOP' +

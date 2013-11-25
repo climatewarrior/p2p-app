@@ -23,26 +23,6 @@ p2pServices.factory('User', ['$resource',
         });
 }]);
 
-p2pServices.factory('ProfileQuestions', ['$resource',
-    function($resource){
-        return $resource('user/question', {}, {
-            pull: {method:'GET',
-                    isArray:true},
-			save: {method:'POST'},
-            getInfo: {method:'GET'},
-        });
-}]);
-
-p2pServices.factory('ProfileAnswers', ['$resource',
-    function($resource){
-        return $resource('user/answer', {}, {
-            pull: {method:'GET',
-                    isArray:true},
-			save: {method:'POST'},
-            getInfo: {method:'GET'},
-        });
-}]);
-
 p2pServices.factory('OtherQuestions', ['$resource',
     function($resource){
         return $resource('user/:username/question', {}, {

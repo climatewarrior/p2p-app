@@ -142,34 +142,20 @@ appControllers.controller('ProfileCtrl', ['$scope', '$location', '$routeParams',
         };
     }]);
 
-appControllers.controller('MyAnsCtrl', ['$scope', '$location', '$routeParams', 'ProfileAnswers', function($scope, $location, $routeParams, ProfileAnswers) {
+appControllers.controller('OtherAnsCtrl', ['$scope', '$location', '$routeParams', 'OtherAnswers', 'User', function($scope, $location, $routeParams, OtherAnswers, User) {
 
         $scope.goNext = function (hash) {
             $location.path(hash);
         };
-        $scope.answers = ProfileAnswers.pull();
-    }]);
-
-appControllers.controller('MyQnsCtrl', ['$scope', '$location', '$routeParams', 'ProfileQuestions', function($scope, $location, $routeParams, ProfileQuestions) {
-
-        $scope.goNext = function (hash) {
-            $location.path(hash);
-        };
-        $scope.questions = ProfileQuestions.pull();
-    }]);
-
-appControllers.controller('OtherAnsCtrl', ['$scope', '$location', '$routeParams', 'OtherAnswers', function($scope, $location, $routeParams, OtherAnswers) {
-
-        $scope.goNext = function (hash) {
-            $location.path(hash);
-        };
+		$scope.user = User.get({username:$routeParams.username});
         $scope.answers = OtherAnswers.getInfo({username:$routeParams.username});
     }]);
 
-appControllers.controller('OtherQnsCtrl', ['$scope', '$location', '$routeParams', 'OtherQuestions', function($scope, $location, $routeParams, OtherQuestions) {
+appControllers.controller('OtherQnsCtrl', ['$scope', '$location', '$routeParams', 'OtherQuestions', 'User', function($scope, $location, $routeParams, OtherQuestions, User) {
 
         $scope.goNext = function (hash) {
             $location.path(hash);
         };
+		$scope.user = User.get({username:$routeParams.username});
         $scope.questions = OtherQuestions.getInfo({username:$routeParams.username});
     }]);

@@ -1,5 +1,5 @@
 <div ng-controller="OtherQnsCtrl">
-    <h3 align="center">My Questions</h3>
+    <h3 align="center">{{user.username}}'s Questions</h3>
         <div class="row-fluid" ng-repeat="question in questions">
             <div class="span2 offset1 muted text-center">
                 <bold>{{question.votes}}</bold>

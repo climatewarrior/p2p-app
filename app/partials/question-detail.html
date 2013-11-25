@@ -1,6 +1,6 @@
 <div ng-controller="QuestionDetailCtrl">
     <div class="row-fluid">
-        <uservote class='span2 offset1' data="question.votes"></uservote>
+        <uservote class='span2 offset1' votes="question.votes"></uservote>
         <div class='span9'>
             <strong>{{question.title}}</strong>
             <p>
@@ -19,7 +19,7 @@
     </div>
     <hr>
     <div class="row-fluid" ng-repeat="answer in question.answers">
-        <uservote class='span2 offset1' data="answer.votes"></uservote>
+        <uservote class='span2 offset1' votes="answer.votes" data="answer.answer_id"></uservote>
         <div class='span9'>
             <p>{{answer.content}}</p>
         </div>

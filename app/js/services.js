@@ -27,8 +27,7 @@ p2pServices.factory('OtherQuestions', ['$resource',
     function($resource){
         return $resource('user/:username/question', {}, {
             save: {method:'POST'},
-            getInfo: {method:'GET',
-						isArray:true},
+            getInfo: {method:'GET', isArray:true}
         });
 }]);
 
@@ -36,8 +35,7 @@ p2pServices.factory('OtherAnswers', ['$resource',
     function($resource){
         return $resource('user/:username/answer', {}, {
             save: {method:'POST'},
-            getInfo: {method:'GET',
-						isArray:true},
+            getInfo: {method:'GET', isArray:true}
         });
 }]);
 

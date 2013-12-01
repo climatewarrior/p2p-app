@@ -165,6 +165,10 @@ appControllers.controller('ProfileCtrl', ['$scope', '$location', '$routeParams',
 
         $scope.user = User.get({username:$routeParams.username});
 
+        $scope.userEqualsProfile = function() {
+          return Auth.user.username == $scope.user.username;
+        };
+
         $scope.logout = function() {
             Auth.logout();
             $location.path("/login");

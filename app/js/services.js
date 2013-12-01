@@ -10,7 +10,6 @@ p2pServices.factory('Question', ['$resource',
             query: {method:'GET',
                     params:{questionId:''},
                     isArray:true},
-            save: {method:'POST'},
             put: {method:'PUT'}
         });
 }]);

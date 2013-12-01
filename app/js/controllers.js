@@ -8,7 +8,10 @@ appControllers.controller('QuestionListCtrl', ['$scope', 'Question',
         $scope.questions = Question.query();
 }]);
 
-appControllers.controller('QuestionDetailCtrl', ['$location', '$scope', '$routeParams', 'Question', 'Auth', function($location, $scope, $routeParams, Question, Auth) {
+appControllers.controller('QuestionDetailCtrl', ['$modal', '$location',
+                                                 '$scope', '$routeParams',
+                                                 'Question', 'Auth',
+                                                 function($modal, $location, $scope, $routeParams, Question, Auth) {
 
         $scope.answer = {};
 
@@ -18,6 +21,30 @@ appControllers.controller('QuestionDetailCtrl', ['$location', '$scope', '$routeP
 
         $scope.setImage = function(imageUrl) {
             $scope.mainImageUrl = imageUrl;
+        };
+
+        var ModalInstanceCtrl = function ($scope, $modalInstance) {
+
+          $scope.ok = function () {
+            Question.delete({questionId: $routeParams.questionId});
+            $modalInstance.close();
+            $location.path("/questions");
+          };
+
+          $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+          };
+        };
+
+        $scope.removePost = function() {
+          var modalInstance = $modal.open({
+            templateUrl: 'partials/delete_question.html',
+            controller: ModalInstanceCtrl
+          });
+        };
+
+        $scope.userEqualsAuthor = function() {
+          return Auth.user.username == $scope.question.submitter;
         };
 
         $scope.addAns = function() {

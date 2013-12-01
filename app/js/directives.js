@@ -86,6 +86,29 @@ p2pDirectives.directive('uservote', ['$routeParams', 'Question', function ($rout
   };
 }]);
 
+p2pDirectives.directive('myself', ['Auth', function (Auth) {
+  return {
+    restrict: 'E',
+    scope: { 'id': '=id'},
+    link : function(scope, element, attrs) {
+      var prevDisp = element.css('display');
+
+      scope.$watch('id', function(id) {
+        console.log(scope.id);
+        if (Auth.user.username != scope.id) {
+          element.css('display', 'none');
+        }
+        else {
+          element.css('display', prevDisp);
+        }
+      });
+
+
+
+    }
+  };
+}]);
+
 p2pDirectives.directive('camera', function() {
   return {
     restrict: 'E',

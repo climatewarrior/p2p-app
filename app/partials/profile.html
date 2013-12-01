@@ -12,8 +12,8 @@
         </div>
 	</div>
 	<div align="center" class="row-fluid">
-		<h5>To Next Level: {{user.next_level_points - user.points}}</h5>
-    <progress percent=((user.next_level_points-user.points)/(user.next_level_points-user.previous_level_points))*100 class="progress-success"></progress>
+		<h5>Points To Next Level: {{user.next_level_points - user.points}}</h5>
+    <progress percent=((user.points-user.previous_level_points)/(user.next_level_points-user.previous_level_points))*100 class="progress-success"></progress>
 
     </div>
 

@@ -18,7 +18,6 @@ p2pServices.factory('Question', ['$resource',
 p2pServices.factory('User', ['$resource',
     function($resource){
         return $resource('user/:username', {}, {
-            save: {method:'POST'},
             getInfo: {method:'GET'}
         });
 }]);
@@ -40,39 +39,74 @@ p2pServices.factory('OtherAnswers', ['$resource',
 }]);
 
 p2pServices.factory('Auth', ['Base64', '$cookieStore', '$http', function (Base64, $cookieStore, $http) {
-    // initialize to whatever is in the cookie, if anything
-    $http.defaults.headers.common['Authorization'] = 'Basic ' + $cookieStore.get('authdata');
 
-    return {
-        correctCredentials: function(username, password, success, error) {
-            var encoded = Base64.encode(username + ':' + password);
+  var accessLevels = routingConfig.accessLevels
+  , userRoles = routingConfig.userRoles
+  , currentUser = angular.fromJson($cookieStore.get('user')) || { username: '', role: userRoles.public };
 
-            $http({method: 'GET',
-                   url: 'test_auth',
-                   headers: {
-                       'Authorization': 'Basic ' + encoded
-                   }}).success(success).error(error);
+  function changeUser(user) {
+    _.extend(currentUser, user);
+  };
 
-        },
-        setCredentials: function (username, password) {
-            var encoded = Base64.encode(username + ':' + password);
+  return {
+    authorize: function(accessLevel, role) {
+      if(role === undefined) {
+        role = currentUser.role;
+        console.log("ROLE");
+        console.log(role);
+        console.log(accessLevel);
+      }
 
-            $http.defaults.headers.common.Authorization = 'Basic ' + encoded;
-            $cookieStore.put('authdata', encoded);
-            $cookieStore.put('username', username);
-        },
-        clearCredentials: function () {
-            document.execCommand("ClearAuthenticationCache");
-            $cookieStore.remove('authdata');
-            $cookieStore.remove('username');
-            $http.defaults.headers.common.Authorization = 'Basic ';
-        },
-        retrieveCredentials: function() {
-            $http.defaults.headers.common['Authorization'] = 'Basic ' + $cookieStore.get('authdata');
+      return accessLevel.bitMask & role.bitMask;
+    },
+    isLoggedIn: function(user) {
+      if(user === undefined) {
+        user = currentUser;
+      }
+      return user.role.title == userRoles.user.title || user.role.title == userRoles.admin.title;
+    },
+    register: function(user, success, error) {
+      $http.post('/user', user).success(function(res) {
+        changeUser(res);
+        success();
+      }).error(error);
+    },
+    login: function(user, success, error) {
+      var encoded = Base64.encode(user.username + ':' + user.password);
+      $http({method: 'GET',
+             url: 'test_auth',
+             headers: {
+               'Authorization': 'Basic ' + encoded
+             }}).success(function(user){
+               changeUser(user);
+               success(user);
+               $http.defaults.headers.common.Authorization = 'Basic ' + encoded;
+               $cookieStore.put('user', JSON.stringify(user));
+               $cookieStore.put('authdata', encoded);
+               $cookieStore.put('username', user.username);
+             }).error(error);
+    },
+    logout: function () {
+      changeUser({
+        username: '',
+        role: userRoles.public
+      });
+      document.execCommand("ClearAuthenticationCache");
+      $cookieStore.remove('authdata');
+      $cookieStore.remove('username');
+      $cookieStore.remove('user');
+      $http.defaults.headers.common.Authorization = 'Basic ';
+    },
+    accessLevels: accessLevels,
+    userRoles: userRoles,
+    user: currentUser,
+    retrieveCredentials: function() {
+      $http.defaults.headers.common['Authorization'] = 'Basic ' + $cookieStore.get('authdata');
+      currentUser = angular.fromJson($cookieStore.get('user')) || { username: '', role: userRoles.public };
 
-            return $cookieStore.get('username');
-        }
-    };
+      return $cookieStore.get('username');
+    }
+  };
 }]);
 
 p2pServices.factory('cordovaReady', [function () {

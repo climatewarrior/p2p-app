@@ -72,59 +72,61 @@ appControllers.controller('QuestionAskCtrl', ['$scope', '$location', 'Question',
 
 }]);
 
-appControllers.controller('RegisterCtrl', ['$scope', '$location', 'User', function($scope, $location, User){
-    $scope.user = {};
+appControllers.controller('RegisterCtrl', ['$rootScope', '$scope', '$location', 'Auth', function($rootScope, $scope, $location, Auth){
+  $scope.user = {};
+  $scope.role = Auth.userRoles.user;
+  $scope.userRoles = Auth.userRoles;
 
-    $scope.goNext = function (hash) {
-        $location.path(hash);
-    };
-
-    $scope.addUser = function() {
-        console.log($scope.user);
-        User.save({}, $scope.user);
-        $location.path("/login");
-    };
+  $scope.addUser = function() {
+    $scope.user.role = $scope.role;
+    Auth.register($scope.user,
+                  function() {
+                    $location.path('/login');
+                  },
+                  function(err) {
+                    $rootScope.error = err;
+                  });
+    console.log($scope.user);
+  };
 
 }]);
 
-appControllers.controller('LoginCtrl', ['$scope', '$location', 'Auth', function($scope, $location, Auth) {
+appControllers.controller('LoginCtrl', ['$rootScope', '$scope', '$location', 'Auth', function($rootScope, $scope, $location, Auth) {
 
-    $scope.user = {};
-    $scope.alerts = [];
+  $scope.user = {};
+  $scope.alerts = [];
 
-    $scope.authFailedAlert = function() {
-        $scope.alerts.push({type: 'error', msg: "Wrong username or password."});
-    };
+  $scope.authFailedAlert = function() {
+    $scope.alerts.push({type: 'error', msg: "Wrong username or password."});
+  };
 
-    $scope.authSuccessAlert = function() {
-        $scope.alerts.push({type: 'success', msg: "Logged in."});
-    };
+  $scope.authSuccessAlert = function() {
+    $scope.alerts.push({type: 'success', msg: "Logged in."});
+  };
 
-    $scope.closeAlert = function(index) {
-        $scope.alerts.splice(index, 1);
-    };
+  $scope.closeAlert = function(index) {
+    $scope.alerts.splice(index, 1);
+  };
 
-    $scope.goNext = function (hash) {
-        $location.path(hash);
-    };
+  $scope.goNext = function (hash) {
+    $location.path(hash);
+  };
 
-    $scope.login = function () {
-
-        console.log($scope.user.username);
-
-        var success = function(data, status, headers, config) {
-            Auth.setCredentials($scope.user.username, $scope.user.password);
-            $scope.authSuccessAlert();
-
-            $location.path("/questions");
-        };
-
-        var error = function(data, status, headers, config) {
-            $scope.authFailedAlert();
-        };
-
-        Auth.correctCredentials($scope.user.username, $scope.user.password, success, error);
-    };
+  $scope.login = function() {
+    Auth.login({
+      username: $scope.user.username,
+      password: $scope.user.password,
+      rememberme: $scope.userememberme
+    },
+               function(res) {
+                 $scope.authSuccessAlert();
+                 $location.path('/questions');
+               },
+               function(err) {
+                 $rootScope.error = "Failed to login";
+                 $scope.authFailedAlert();
+               });
+  };
 
 }]);
 
@@ -137,7 +139,7 @@ appControllers.controller('ProfileCtrl', ['$scope', '$location', '$routeParams',
         $scope.user = User.get({username:$routeParams.username});
 
         $scope.logout = function() {
-            Auth.clearCredentials();
+            Auth.logout();
             $location.path("/login");
         };
     }]);
@@ -147,7 +149,7 @@ appControllers.controller('OtherAnsCtrl', ['$scope', '$location', '$routeParams'
         $scope.goNext = function (hash) {
             $location.path(hash);
         };
-		$scope.user = User.get({username:$routeParams.username});
+        $scope.user = User.get({username:$routeParams.username});
         $scope.answers = OtherAnswers.getInfo({username:$routeParams.username});
     }]);
 

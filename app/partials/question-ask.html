@@ -2,9 +2,9 @@
     <div class="span11 offset1">
         <form ng-submit="addQuestion()">
             <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
-            <label>Title</label>
+            <label>Short version of your question</label>
             <input type="text" id="title" ng-model="question.title" required/>
-            <label>What Is Your Question?</label>
+            <label>Add details for your question here</label>
             <textarea rows=10 id="content" ng-model="question.detailed"></textarea>
             <label>Tags (separated by commas)</label>
             <input type="text" id="tags" ng-model="question.tags" required/>

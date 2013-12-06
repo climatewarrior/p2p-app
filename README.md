@@ -25,30 +25,30 @@ an Android based device. The instructions are specific to *nix based
 operating systems:
 
 1. Create a Phonegap project with:
-`bash
+```bash
 phonegap create p2p-app-runner org.p2pga.qanda 'P2P-QandA'
-`
+```
 
 2. Move into the newly created directory:
-`bash
+```bash
 cd p2p-app-runner
-`
+```
 
 3. Install any necessary Phonegap modules, currently the only module
    necessary is the camera module.
-`bash
+```bash
 phonegap local plugin add https://git-wip-us.apache.org/repos/asf/cordova-plugin-camera.git
-`
+```
 
 4. Rename the www folder to something else:
-`bash
+```bash
 mv www www-old
-`
+```
 
 5. Link the www to app directory within the p2p-app repository:
-`bash
+```bash
 ln -s ../p2p-app/app/ www
-`
+```
 
 6. Point the app to the necessary backend server. Modify the file
    `p2p-app/app/js/services.js` so that all URLs point the required
@@ -59,9 +59,9 @@ ln -s ../p2p-app/app/ www
    configured the Android development environment.
 
 8. Compile, deploy and run the App.
-`bash
+```bash
 phonegap run andoid
-`
+```
 
 Deploying the application as a mobile web app
 ------
